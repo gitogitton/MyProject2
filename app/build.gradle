@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+//        applicationId "com.example.user.myproject2"
+        minSdkVersion 19
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
+
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+        }
+        demo {
+            java.srcDirs = ['src/demo/java']
+            res.srcDirs = ['src/demo/res']
+
+            manifest.srcFile 'src/demo/AndroidManifest.xml'
+        }
+    }
+    flavorDimensions "fd1"
+    productFlavors {
+        main {
+            dimension "fd1"
+            applicationId "com.example.user.myproject2"
+            versionName "1.0.0"
+        }
+        demo {
+            dimension "fd1"
+            applicationId "com.example.user.myproject2.demo"
+            versionName "1.0.0 (demo)"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
