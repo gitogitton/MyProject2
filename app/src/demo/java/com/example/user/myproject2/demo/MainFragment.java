@@ -47,11 +47,6 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-//        // ListViewに表示するデータ
-//        final ArrayList<String> items = new ArrayList<>();
-//        items.add("データ1");
-//        items.add("データ2");
-//        items.add("データ3");
 
         mView = view;
         setRunningProcess();
