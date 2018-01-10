@@ -35,6 +35,7 @@ public class PageFragment_1 extends Fragment {
 
     private final String CLASS_NAME = getClass().getSimpleName();
 //    protected static final String ARG_PARAM1 = "param1";
+    private ArrayList<TextView> mArrayList = new ArrayList<>();
 
     public PageFragment_1() {
         Log.d(CLASS_NAME, "constructor start (empty)");
@@ -89,48 +90,48 @@ public class PageFragment_1 extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d(CLASS_NAME, "onViewCreated() start.");
 
-//        Context context = this.getContext();
-        Context context = getActivity().getApplicationContext();
-        ActivityManager activityManager = (ActivityManager) context.getSystemService( ACTIVITY_SERVICE );
+        setRunningProcess();
 
-        ArrayList<TextView> arrayList = new ArrayList<>();
-        if (null != activityManager) {
-            List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
-            PackageManager packageManager = context.getPackageManager();
-            Log.d(CLASS_NAME, "running appl count : " + runningApp.size());
-            if (!runningApp.isEmpty()) {
-                arrayList.clear();
-                int i = 0;
-                for ( ActivityManager.RunningAppProcessInfo app : runningApp ) {
-                    i++;
-                    try {
-                        ApplicationInfo applicationInfo = packageManager.getApplicationInfo(app.processName, 0);
-                        Drawable applicationIcon = packageManager.getApplicationIcon(applicationInfo);
-                        //set application name.
-                        TextView textView = new TextView(context);
-                        String packageName = i + ") " + packageManager.getApplicationLabel(applicationInfo);
-                        textView.setText(packageName);
-                        //Log.d(CLASS_NAME, "package name -> "+packageName);
-                        //set icon.
-                        AtomicReference<Drawable> icon = new AtomicReference<>();
-                        icon.set(applicationIcon);
-                        //ICONの表示位置を設定 (引数：座標 x, 座標 y, 幅, 高さ)
-//                                Log.d(CLASS_NAME, "size of icon (w/h) : "+icon.get().getIntrinsicWidth()+" / "+icon.get().getIntrinsicHeight());
-//iconサイズそのままだから・・・                                icon.get().setBounds(0, 0, icon.get().getIntrinsicWidth(), icon.get().getIntrinsicHeight());
-                        icon.get().setBounds(0, 0, 72, 72);
-                        //TextViewにアイコンセット（四辺(left, top, right, bottom)に対して別個にアイコンを描画できる）
-                        textView.setCompoundDrawables(icon.get(), null, null, null);
-                        //add new data to array.
-                        arrayList.add(textView);
-                    } catch (PackageManager.NameNotFoundException e) {
-//                        e.printStackTrace();
-//                        Log.d(CLASS_NAME, "exception of getapplicationinfo() : i=" + i + "processname=" + app.processName + " / " + "importance=" + app.importance);
-                    }
-                }//for(app)
-            }//if(!runningApp)
-        }
+//        ArrayList<TextView> arrayList = new ArrayList<>();
+//        if (null != activityManager) {
+//            List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
+//            PackageManager packageManager = context.getPackageManager();
+//            Log.d(CLASS_NAME, "running appl count : " + runningApp.size());
+//            if (!runningApp.isEmpty()) {
+//                arrayList.clear();
+//                int i = 0;
+//                for ( ActivityManager.RunningAppProcessInfo app : runningApp ) {
+//                    i++;
+//                    try {
+//                        ApplicationInfo applicationInfo = packageManager.getApplicationInfo(app.processName, 0);
+//                        Drawable applicationIcon = packageManager.getApplicationIcon(applicationInfo);
+//                        //set application name.
+//                        TextView textView = new TextView(context);
+//                        String packageName = i + ") " + packageManager.getApplicationLabel(applicationInfo);
+//                        textView.setText(packageName);
+//                        //Log.d(CLASS_NAME, "package name -> "+packageName);
+//                        //set icon.
+//                        AtomicReference<Drawable> icon = new AtomicReference<>();
+//                        icon.set(applicationIcon);
+//                        //ICONの表示位置を設定 (引数：座標 x, 座標 y, 幅, 高さ)
+////                                Log.d(CLASS_NAME, "size of icon (w/h) : "+icon.get().getIntrinsicWidth()+" / "+icon.get().getIntrinsicHeight());
+////iconサイズそのままだから・・・                                icon.get().setBounds(0, 0, icon.get().getIntrinsicWidth(), icon.get().getIntrinsicHeight());
+//                        icon.get().setBounds(0, 0, 72, 72);
+//                        //TextViewにアイコンセット（四辺(left, top, right, bottom)に対して別個にアイコンを描画できる）
+//                        textView.setCompoundDrawables(icon.get(), null, null, null);
+//                        //add new data to array.
+//                        arrayList.add(textView);
+//                    } catch (PackageManager.NameNotFoundException e) {
+////                        e.printStackTrace();
+////                        Log.d(CLASS_NAME, "exception of getapplicationinfo() : i=" + i + "processname=" + app.processName + " / " + "importance=" + app.importance);
+//                    }
+//                }//for(app)
+//            }//if(!runningApp)
+//        }
 
-        ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, arrayList );
+        Context context = this.getContext();
+//        Context context = getActivity().getApplicationContext();
+        ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
         ListView listView = view.findViewById( R.id.process_list );
         listView.setAdapter( listViewAdapter );
 
@@ -169,6 +170,53 @@ public class PageFragment_1 extends Fragment {
             }
         });
     }
+
+    private void setRunningProcess() {
+        Log.d(CLASS_NAME, "setRunningProcess() start");
+
+        Context context = this.getContext();
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+
+        if (null != activityManager) {
+
+            List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
+            PackageManager packageManager = context.getPackageManager();
+            Log.d(CLASS_NAME, "running appl count : " + runningApp.size());
+
+            if (!runningApp.isEmpty()) {
+                int i = 0;
+                mArrayList.clear();
+                for (ActivityManager.RunningAppProcessInfo app : runningApp) {
+                    i++;
+                    try {
+                        ApplicationInfo applicationInfo = packageManager.getApplicationInfo(app.processName, 0);
+                        Drawable applicationIcon = packageManager.getApplicationIcon(applicationInfo);
+                        //set application name.
+                        TextView textView = new TextView(context);
+                        String packageName = i + ") " + (String) packageManager.getApplicationLabel(applicationInfo);
+                        textView.setText(packageName);
+                        //Log.d(CLASS_NAME, "package name -> "+packageName);
+                        //set icon.
+                        AtomicReference<Drawable> icon = new AtomicReference<>();
+                        icon.set(applicationIcon);
+                        //ICONの表示位置を設定 (引数：座標 x, 座標 y, 幅, 高さ)
+//                                Log.d(CLASS_NAME, "size of icon (w/h) : "+icon.get().getIntrinsicWidth()+" / "+icon.get().getIntrinsicHeight());
+//iconサイズそのままだから・・・                                icon.get().setBounds(0, 0, icon.get().getIntrinsicWidth(), icon.get().getIntrinsicHeight());
+                        icon.get().setBounds(0, 0, 72, 72);
+                        //TextViewにアイコンセット（四辺(left, top, right, bottom)に対して別個にアイコンを描画できる）
+                        textView.setCompoundDrawables(icon.get(), null, null, null);
+                        //add new data to array.
+                        mArrayList.add(textView);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                        Log.d(CLASS_NAME, "exception of getapplicationinfo() : i=" + i + "processname=" + app.processName + " / " + "importance=" + app.importance);
+                    }
+                }//for(app)
+
+            }//if(!runningApp)
+        }
+    }
+
 }
 
 //    /**
