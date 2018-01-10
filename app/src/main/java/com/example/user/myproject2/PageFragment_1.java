@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -130,6 +131,7 @@ public class PageFragment_1 extends Fragment {
 //        }
 
         Context context = this.getContext();
+        Context context1 = getActivity();
 //        Context context = getActivity().getApplicationContext();
         ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
         ListView listView = view.findViewById( R.id.process_list );
