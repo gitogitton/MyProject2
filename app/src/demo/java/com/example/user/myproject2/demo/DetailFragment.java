@@ -22,11 +22,12 @@ public class DetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Bundle args = getArguments();
-        int selected = args.getInt("selected");
+//        int selected = args.getInt("selected");
 
-        View view = inflater.inflate(R.layout.fragment_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_demo, container, false);
         TextView textView = (TextView)view.findViewById(R.id.textView);
-        textView.setText(String.valueOf(selected) + "番目が選択されました");
+//        textView.setText(String.valueOf(selected) + "番目が選択されました");
+        textView.setText(" ? " + "番目が選択されました");
         return view;
     }
 

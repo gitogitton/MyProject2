@@ -9,21 +9,19 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by User on 2017/12/08.
- */
+//
+// Created by User on 2017/12/08.
+//
 
 public class CustomPagerAdapter extends FragmentPagerAdapter {
 
     private final String[] pageTitle = {"Running Process", "Installed Application"};//, "Setting"}; //タブページのタイトル
-    private final static int TABPAGE_RUNNING_PROCESS = 0;
-    private final static int TABPAGE_INSTALLED_APPLICATION = 1;
+    private final static int TAB_PAGE_RUNNING_PROCESS = 0;
+    private final static int TAB_PAGE_INSTALLED_APPLICATION = 1;
 
     private final String CLASS_NAME =getClass().getSimpleName();
-//    private PageFragment_1 mPage1;
-//    private PageFragment_2 mPage2;
 
-    public CustomPagerAdapter(FragmentManager fm) {
+    CustomPagerAdapter(FragmentManager fm) {
         super(fm);
         Log.d(CLASS_NAME, "constructor start.");
     }
@@ -61,20 +59,18 @@ public class CustomPagerAdapter extends FragmentPagerAdapter {
 
     /**
      * Return the Fragment associated with a specified position.
-     *
-     * @param position
      */
     @Override
     public Fragment getItem(int position) {
         Log.d(CLASS_NAME, "FragmentPagerAdapter.getItem() start. position=" + position);
         switch (position) {
-            case TABPAGE_RUNNING_PROCESS :
-                return PageFragment_1.newInstance( TABPAGE_RUNNING_PROCESS );
-            case TABPAGE_INSTALLED_APPLICATION :
-                return PageFragment_2.newInstance( TABPAGE_INSTALLED_APPLICATION );
+            case TAB_PAGE_RUNNING_PROCESS :
+                return new PageFragment_1();
+            case TAB_PAGE_INSTALLED_APPLICATION :
+                return new PageFragment_2();
             default:
                 Log.d(CLASS_NAME, "illegal argument. (position)");
-                return null;
+                return new PageFragment_2();
         }
     }
 

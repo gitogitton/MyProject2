@@ -11,21 +11,19 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Created by User on 2017/12/08.
- */
+//
+// Created by User on 2017/12/08.
+//
 
 public class ListViewAdapter extends ArrayAdapter<TextView> {
 
     private final String CLASS_NAME = "ListViewAdapter";
     private LayoutInflater mInflater = null;
 
-    public ListViewAdapter(@NonNull Context context, int resource, int textViewResourceId, List<TextView> objects) {
+    ListViewAdapter(@NonNull Context context, int resource, int textViewResourceId, List<TextView> objects) {
         super(context, resource, textViewResourceId, objects);
         mInflater = LayoutInflater.from(context);
         Log.d( CLASS_NAME,"ListViewAdapter start" );
