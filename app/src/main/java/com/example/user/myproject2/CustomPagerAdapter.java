@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 //
 // Created by User on 2017/12/08.
@@ -75,48 +76,18 @@ public class CustomPagerAdapter extends FragmentPagerAdapter {
     }
 
 //    /**
-//     * Create the page for the given position.  The adapter is responsible
-//     * for adding the view to the container given here, although it only
-//     * must ensure this is done by the time it returns from
-//     * {@link #finishUpdate(ViewGroup)}.
+//     * Determines whether a page View is associated with a specific key object
+//     * as returned by {@link #instantiateItem(ViewGroup, int)}. This method is
+//     * required for a PagerAdapter to function properly.
 //     *
-//     * @param container The containing View in which the page will be shown.
-//     * @param position  The page position to be instantiated.
-//     * @return Returns an Object representing the new page.  This does not
-//     * need to be a View, but can be some other container of the page.
+//     * @param view   Page View to check for association with <code>object</code>
+//     * @param object Object to check for association with <code>view</code>
+//     * @return true if <code>view</code> is associated with the key object <code>object</code>
 //     */
-//    @NonNull
 //    @Override
-//    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-//        Log.d(CLASS_NAME, "instantiateItem() start. position->"+position);
-////        return super.instantiateItem(container, position);
-//
-//        switch ( position ) {
-//            case TABPAGE_RUNNING_PROCESS :
-//                //mPage1;
-//                mPage1 = new PageFragment_1();
-//                return mPage1;
-//            case TABPAGE_INSTALLED_APPLICATION :
-//                //mPage2;
-//                mPage2 = new PageFragment_2();
-//                return mPage1;
-//            default :
-//                break;
-//        }
-//        return null;
+//    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+////        return false;
+//        return view == object;
 //    }
 
-    /**
-     * Determines whether a page View is associated with a specific key object
-     * as returned by {@link #instantiateItem(ViewGroup, int)}. This method is
-     * required for a PagerAdapter to function properly.
-     *
-     * @param view   Page View to check for association with <code>object</code>
-     * @param object Object to check for association with <code>view</code>
-     * @return true if <code>view</code> is associated with the key object <code>object</code>
-     */
-    @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return false;
-    }
 }
