@@ -1,11 +1,15 @@
 package com.example.user.myproject2;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+
+import static android.util.TypedValue.COMPLEX_UNIT_SP;
 
 //Created by User on 2017/12/08
 
@@ -31,9 +35,13 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         final ViewPager viewPager = findViewById(R.id.view_pager);
-
+        if ( 0 < viewPager.getChildCount() ) {
+            PagerTitleStrip pagerTitleStrip = (PagerTitleStrip)viewPager.getChildAt( 0 );
+            pagerTitleStrip.setTextSize( COMPLEX_UNIT_SP, (float)20.0 );
+            pagerTitleStrip.setTextSpacing( 100 ); //pixel
+            pagerTitleStrip.setTextColor( Color.BLUE );
+        }
         final CustomPagerAdapter fragmentPagerAdapter = new CustomPagerAdapter(fragmentManager);
-
         viewPager.setAdapter( fragmentPagerAdapter );
 
 //        mViewPager.addOnPageChangeListener(this); //ページ切り替え、ページスクロール時に呼ばれるリスナー登録

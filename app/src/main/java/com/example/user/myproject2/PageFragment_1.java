@@ -66,9 +66,7 @@ public class PageFragment_1 extends Fragment {
 
         setRunningProcess();
 
-        Context context = this.getContext();
-        Context context1 = getActivity();
-//        Context context = getActivity().getApplicationContext();
+        Context context = getActivity();
 
         ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
         ListView listView = view.findViewById( R.id.process_list );
@@ -78,6 +76,8 @@ public class PageFragment_1 extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+
+
 //                // 詳細画面へ値を渡す
 //                DetailFragment fragment = new DetailFragment();
 //                Bundle bundle = new Bundle();
