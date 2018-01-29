@@ -1,6 +1,7 @@
 package com.example.user.myproject2;
 
 import android.app.ActivityManager;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +49,7 @@ public class PageFragment_1 extends Fragment {
 //        if (null!=savedInstanceState) {
 //            int page = getArguments().getInt(ARG_PARAM1, 0);
 //        }
-        return inflater.inflate(R.layout.fragment_page, container, false);
+        return inflater.inflate( R.layout.fragment_page, container, false );
     }
 
     /**
@@ -76,7 +78,16 @@ public class PageFragment_1 extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-
+                Log.d( CLASS_NAME, "onItemClick() starts." );
+                ListView listView1 = (ListView)parent;
+                TextView textView = (TextView)listView1.getAdapter().getItem( position );
+                DetailInfoFragment detailInfoFragment = DetailInfoFragment.newInstance( textView.getText().toString() );
+//                DetailInfoFragment detailInfoFragment = new DetailInfoFragment();
+                android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add( R.id.container, detailInfoFragment );
+                fragmentTransaction.addToBackStack( null );
+                fragmentTransaction.commit();
 
 //                // 詳細画面へ値を渡す
 //                DetailFragment fragment = new DetailFragment();
@@ -116,7 +127,8 @@ public class PageFragment_1 extends Fragment {
                         Drawable applicationIcon = packageManager.getApplicationIcon(applicationInfo);
                         //set application name.
                         TextView textView = new TextView(context);
-                        String packageName = i + ") " + (String) packageManager.getApplicationLabel(applicationInfo);
+//                        String packageName = i + ") " + (String) packageManager.getApplicationLabel(applicationInfo);
+                        String packageName = (String)packageManager.getApplicationLabel(applicationInfo);
                         textView.setText(packageName);
                         //Log.d(CLASS_NAME, "package name -> "+packageName);
                         //set icon.

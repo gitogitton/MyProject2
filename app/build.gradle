@@ -14,10 +14,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            applicationIdSuffix  ".rel"
+            applicationIdSuffix ".rel"
         }
         debug {
-            applicationIdSuffix  ".deb"
+            applicationIdSuffix ".deb"
         }
     }
     sourceSets {
@@ -38,12 +38,12 @@ android {
     productFlavors {
         main {
             dimension "fd1"
-            applicationIdSuffix  ".main"
+            applicationIdSuffix ".main"
             versionName "1.0.0"
         }
         demo {
             dimension "fd1"
-            applicationIdSuffix  ".demo"
+            applicationIdSuffix ".demo"
             versionName "1.0.0 (demo)"
         }
     }

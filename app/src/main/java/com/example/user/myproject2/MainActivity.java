@@ -3,6 +3,7 @@ package com.example.user.myproject2;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,8 +16,8 @@ import static android.util.TypedValue.COMPLEX_UNIT_SP;
 
 public class MainActivity extends AppCompatActivity {
 
+    FragmentManager mFragmentManager;
     private final String CLASS_NAME = getClass().getSimpleName();
-
 //    private TabLayout mTabLayout;
 
     @Override
@@ -28,12 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar); //ToolbarはAPI21からのサポート。API19だからActionBarをサポートする。
-
 //        mTabLayout = findViewById(R.id.tab);
 //        mTabLayout.setupWithViewPager(mViewPager); //TabLayoutとViewPagerを連動させる
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
         final ViewPager viewPager = findViewById(R.id.view_pager);
         if ( 0 < viewPager.getChildCount() ) {
             PagerTitleStrip pagerTitleStrip = (PagerTitleStrip)viewPager.getChildAt( 0 );
@@ -41,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
             pagerTitleStrip.setTextSpacing( 100 ); //pixel
             pagerTitleStrip.setTextColor( Color.BLUE );
         }
-        final CustomPagerAdapter fragmentPagerAdapter = new CustomPagerAdapter(fragmentManager);
+        if ( null == savedInstanceState ) {
+            mFragmentManager = getSupportFragmentManager();
+        }
+        final CustomPagerAdapter fragmentPagerAdapter = new CustomPagerAdapter(mFragmentManager);
         viewPager.setAdapter( fragmentPagerAdapter );
 
 //        mViewPager.addOnPageChangeListener(this); //ページ切り替え、ページスクロール時に呼ばれるリスナー登録
