@@ -1,7 +1,7 @@
 package com.example.user.myproject2;
 
 import android.app.ActivityManager;
-import android.app.FragmentManager;
+//import android.app.FragmentManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,10 +46,12 @@ public class PageFragment_1 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(CLASS_NAME, "onCreateView() start. savedInstanceState->"+savedInstanceState);
+
         // Inflate the layout for this fragment
 //        if (null!=savedInstanceState) {
 //            int page = getArguments().getInt(ARG_PARAM1, 0);
 //        }
+
         return inflater.inflate( R.layout.fragment_page, container, false );
     }
 
@@ -83,11 +86,13 @@ public class PageFragment_1 extends Fragment {
                 TextView textView = (TextView)listView1.getAdapter().getItem( position );
                 DetailInfoFragment detailInfoFragment = DetailInfoFragment.newInstance( textView.getText().toString() );
 //                DetailInfoFragment detailInfoFragment = new DetailInfoFragment();
-                android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add( R.id.container, detailInfoFragment );
+                fragmentTransaction.add( R.id.topViewGroup, detailInfoFragment );
                 fragmentTransaction.addToBackStack( null );
                 fragmentTransaction.commit();
+                fragmentManager.executePendingTransactions(); // FragmentのTransaction処理の完了同期待ち（必須ではない）
 
 //                // 詳細画面へ値を渡す
 //                DetailFragment fragment = new DetailFragment();
