@@ -117,7 +117,6 @@ public class PageFragment_1 extends Fragment {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
 
         if (null != activityManager) {
-
             List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
             PackageManager packageManager = context.getPackageManager();
             Log.d(CLASS_NAME, "running appl count : " + runningApp.size());

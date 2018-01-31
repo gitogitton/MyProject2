@@ -1,7 +1,13 @@
 package com.example.user.myproject2;
 
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,4 +71,26 @@ public class DetailInfoFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_detail_info, container, false);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d( CLASS_NAME, "onViewCreated() starts." );
+        TextView textView = view.findViewById( R.id.app_name );
+        textView.setText( mParam1 );
+        Context context = this.getContext();
+        PackageManager packageManager = context.getPackageManager();
+        ActivityManager activityManager = (ActivityManager) context.getSystemService( Context.ACTIVITY_SERVICE );
+
+//        ActivityManager.RunningAppProcessInfo
+
+
+        try {
+            Log.d( CLASS_NAME, "表示するアプリ名称：" + mParam1 );
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo( mParam1, 0 );
+        }
+        catch ( PackageManager.NameNotFoundException e ) {
+            e.printStackTrace();
+//            Log.d(CLASS_NAME, "exception of getapplicationinfo() : ", "processname=" + app.processName + " / " + "importance=" + app.importance);
+        }
+        super.onViewCreated(view, savedInstanceState);
+    }
 }

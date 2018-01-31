@@ -5,7 +5,7 @@
 
     <string name="test_string">テストです。</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="No_Data">データがありません。</string>
+    <string name="error">error happened !!</string>
 </resources>
