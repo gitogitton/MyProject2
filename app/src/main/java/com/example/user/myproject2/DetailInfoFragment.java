@@ -46,10 +46,10 @@ public class DetailInfoFragment extends Fragment {
 //     * @param param1 Parameter 1.
 //     * @return A new instance of fragment DetailInfoFragment.
 //     */
-    public static DetailInfoFragment newInstance( String param1 ) {
+    public static DetailInfoFragment newInstance( DetailInfo param1 ) {
         DetailInfoFragment fragment = new DetailInfoFragment();
         Bundle args = new Bundle();
-        args.putString( ARG_PARAM1, param1 );
+//        args.putSerializable( ARG_PARAM1, param1 );
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,8 +58,10 @@ public class DetailInfoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d( CLASS_NAME, "onCreate() starts." );
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+        Bundle bundle = getArguments();
+        DetailInfo detailInfo = (DetailInfo) bundle.getSerializable( "DETAILINFO" );
+        if ( null!=detailInfo) {
+            mParam1 = detailInfo.getPackageName().getText().toString();
             Log.d( CLASS_NAME, "onCreate() starts. [mParam1 : "+ mParam1 + "]" );
         }
     }

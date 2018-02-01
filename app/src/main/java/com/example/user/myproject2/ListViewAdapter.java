@@ -18,12 +18,12 @@ import java.util.concurrent.atomic.AtomicReference;
 // Created by User on 2017/12/08.
 //
 
-public class ListViewAdapter extends ArrayAdapter<TextView> {
+public class ListViewAdapter extends ArrayAdapter<DetailInfo> {
 
     private final String CLASS_NAME = "ListViewAdapter";
     private LayoutInflater mInflater = null;
 
-    ListViewAdapter(@NonNull Context context, int resource, int textViewResourceId, List<TextView> objects) {
+    ListViewAdapter(@NonNull Context context, int resource, int textViewResourceId, List<DetailInfo> objects) {
         super(context, resource, textViewResourceId, objects);
         mInflater = LayoutInflater.from(context);
         Log.d( CLASS_NAME,"ListViewAdapter start" );
@@ -32,6 +32,7 @@ public class ListViewAdapter extends ArrayAdapter<TextView> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
         View mView;
 
         if (null!=convertView) {
@@ -39,18 +40,20 @@ public class ListViewAdapter extends ArrayAdapter<TextView> {
         } else {
             mView = mInflater.inflate(R.layout.page_row, parent, false);
         }
-
-        //set text and icon on TextView
-        TextView textView = mView.findViewById(R.id.list_row_text); //layoutのコントロールＩＤを取得
-        if (null!=textView) {
+        //ListViewの行（TextView）Viewを取得
+        TextView textView = mView.findViewById( R.id.list_row_text );
+        //set item data(text, icon) on TextView control
+        if ( null!=textView ) {
+            DetailInfo detailInfo = getItem( position );
             //icon
-            Drawable[] applicationIcon = getItem(position).getCompoundDrawables();
+            Drawable[] applicationIcon = detailInfo.getPackageName().getCompoundDrawables();
             AtomicReference<Drawable> icon = new AtomicReference<>();
             icon.set( applicationIcon[0] );
             icon.get().setBounds(0, 0, applicationIcon[0].getBounds().width(), applicationIcon[0].getBounds().height()); //ICONの表示位置を設定 (引数：座標 x, 座標 y, 幅, 高さ)
             textView.setCompoundDrawables(icon.get(), null, null, null); //TextViewにアイコンセット（四辺(left, top, right, bottom)に対して別個にアイコンを描画できる）
             //text
-            textView.setText( getItem(position).getText() );
+            textView.setText( detailInfo.getPackageName().getText() );
+            Log.d( CLASS_NAME, "packageName Text : " + detailInfo.getPackageName().getText() );
         } else {
             Log.d(CLASS_NAME, "textView is null at getView().");
         }//if(textView)

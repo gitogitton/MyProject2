@@ -37,7 +37,7 @@ public class PageFragment_1 extends Fragment {
 
     private final String CLASS_NAME = getClass().getSimpleName();
 //    protected static final String ARG_PARAM1 = "param1";
-    private ArrayList<TextView> mArrayList = new ArrayList<>();
+    private ArrayList<DetailInfo> mArrayList = new ArrayList<>();
 
     public PageFragment_1() {
         Log.d(CLASS_NAME, "constructor start (empty)");
@@ -83,29 +83,20 @@ public class PageFragment_1 extends Fragment {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Log.d( CLASS_NAME, "onItemClick() starts." );
                 ListView listView1 = (ListView)parent;
-                TextView textView = (TextView)listView1.getAdapter().getItem( position );
-                DetailInfoFragment detailInfoFragment = DetailInfoFragment.newInstance( textView.getText().toString() );
-//                DetailInfoFragment detailInfoFragment = new DetailInfoFragment();
+                DetailInfo detailInfo = (DetailInfo) listView1.getAdapter().getItem( position );
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("DETAILINFO", detailInfo );
+
+                DetailInfoFragment detailInfoFragment = new DetailInfoFragment();
+                detailInfoFragment.setArguments( bundle );
+
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add( R.id.topViewGroup, detailInfoFragment );
                 fragmentTransaction.addToBackStack( null );
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions(); // FragmentのTransaction処理の完了同期待ち（必須ではない）
-
-//                // 詳細画面へ値を渡す
-//                DetailFragment fragment = new DetailFragment();
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("selected",position);
-//                fragment.setArguments(bundle);
-//                // 詳細画面を呼び出す
-//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                FragmentTransaction transaction = fragmentManager.beginTransaction();
-//                transaction.replace(R.id.textView, fragment);
-//                // 戻るボタンで戻ってこれるように
-//                transaction.addToBackStack(null);
-//                transaction.commit();
             }
         });
     }
@@ -117,6 +108,7 @@ public class PageFragment_1 extends Fragment {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
 
         if (null != activityManager) {
+
             List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
             PackageManager packageManager = context.getPackageManager();
             Log.d(CLASS_NAME, "running appl count : " + runningApp.size());
@@ -128,15 +120,13 @@ public class PageFragment_1 extends Fragment {
                     i++;
                     try {
                         ApplicationInfo applicationInfo = packageManager.getApplicationInfo(app.processName, 0);
-                        Drawable applicationIcon = packageManager.getApplicationIcon(applicationInfo);
                         //set application name.
-                        TextView textView = new TextView(context);
-//                        String packageName = i + ") " + (String) packageManager.getApplicationLabel(applicationInfo);
                         String packageName = (String)packageManager.getApplicationLabel(applicationInfo);
-                        textView.setText(packageName);
-                        //Log.d(CLASS_NAME, "package name -> "+packageName);
+                        TextView textView = new TextView( context );
+                        textView.setText( packageName );
                         //set icon.
                         AtomicReference<Drawable> icon = new AtomicReference<>();
+                        Drawable applicationIcon = packageManager.getApplicationIcon(applicationInfo);
                         icon.set(applicationIcon);
                         //ICONの表示位置を設定 (引数：座標 x, 座標 y, 幅, 高さ)
 //                                Log.d(CLASS_NAME, "size of icon (w/h) : "+icon.get().getIntrinsicWidth()+" / "+icon.get().getIntrinsicHeight());
@@ -144,8 +134,14 @@ public class PageFragment_1 extends Fragment {
                         icon.get().setBounds(0, 0, 72, 72);
                         //TextViewにアイコンセット（四辺(left, top, right, bottom)に対して別個にアイコンを描画できる）
                         textView.setCompoundDrawables(icon.get(), null, null, null);
-                        //add new data to array.
-                        mArrayList.add(textView);
+                        //add new data to listview array.
+                        DetailInfo detailInfo = new DetailInfo();
+                        detailInfo.setPackageName( textView );
+                        detailInfo.setPid( app.pid );
+                        mArrayList.add( detailInfo );
+
+                        Log.d( CLASS_NAME, "packageName : " + textView.getText().toString() );
+
                     } catch (PackageManager.NameNotFoundException e) {
                         e.printStackTrace();
                         Log.d(CLASS_NAME, "exception of getapplicationinfo() : i=" + i + "processname=" + app.processName + " / " + "importance=" + app.importance);

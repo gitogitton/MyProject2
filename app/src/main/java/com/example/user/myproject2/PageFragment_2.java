@@ -32,6 +32,7 @@ public class PageFragment_2 extends Fragment {
 
     private final String CLASS_NAME = getClass().getSimpleName();
 //    protected static final String ARG_PARAM1 = "param1";
+    private ArrayList<DetailInfo> mArrayList = new ArrayList<>();
 
     public PageFragment_2() {
         Log.d(CLASS_NAME, "constructor start (empty)");
@@ -71,7 +72,7 @@ public class PageFragment_2 extends Fragment {
         Log.d(CLASS_NAME, "onViewCreated() start.");
         Context context = this.getContext();
         ActivityManager activityManager = (ActivityManager) context.getSystemService( ACTIVITY_SERVICE );
-        ArrayList<TextView> arrayList = new ArrayList<>();
+        ArrayList<DetailInfo> arrayList = new ArrayList<>();
         if (null != activityManager) {
             List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
             PackageManager packageManager = context.getPackageManager();
@@ -83,14 +84,13 @@ public class PageFragment_2 extends Fragment {
                     i++;
                     try {
                         ApplicationInfo applicationInfo = packageManager.getApplicationInfo(app.processName, 0);
-                        Drawable applicationIcon = packageManager.getApplicationIcon(applicationInfo);
                         //set application name.
-                        TextView textView = new TextView(context);
-                        String packageName = i + ") " + packageManager.getApplicationLabel(applicationInfo);
-                        textView.setText(packageName);
-                        //Log.d(CLASS_NAME, "package name -> "+packageName);
+                        String packageName = (String)packageManager.getApplicationLabel(applicationInfo);
+                        TextView textView = new TextView( context );
+                        textView.setText( packageName );
                         //set icon.
                         AtomicReference<Drawable> icon = new AtomicReference<>();
+                        Drawable applicationIcon = packageManager.getApplicationIcon(applicationInfo);
                         icon.set(applicationIcon);
                         //ICONの表示位置を設定 (引数：座標 x, 座標 y, 幅, 高さ)
 //                                Log.d(CLASS_NAME, "size of icon (w/h) : "+icon.get().getIntrinsicWidth()+" / "+icon.get().getIntrinsicHeight());
@@ -98,8 +98,11 @@ public class PageFragment_2 extends Fragment {
                         icon.get().setBounds(0, 0, 72, 72);
                         //TextViewにアイコンセット（四辺(left, top, right, bottom)に対して別個にアイコンを描画できる）
                         textView.setCompoundDrawables(icon.get(), null, null, null);
-                        //add new data to array.
-                        arrayList.add(textView);
+                        //add new data to listview array.
+                        DetailInfo detailInfo = new DetailInfo();
+                        detailInfo.setPackageName( textView );
+                        detailInfo.setPid( app.pid );
+                        mArrayList.add( detailInfo );
                     } catch (PackageManager.NameNotFoundException e) {
 //                        e.printStackTrace();
 //                        Log.d(CLASS_NAME, "exception of getapplicationinfo() : i=" + i + "processname=" + app.processName + " / " + "importance=" + app.importance);
