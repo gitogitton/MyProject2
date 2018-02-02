@@ -16,6 +16,14 @@ public class DetailInfo implements Serializable {
     private TextView mPackageName;
     private int mPid;
     private int mPss;
+    private String mProcessName;
+
+    public String getProcessName() {
+        return mProcessName;
+    }
+    public void setProcessName( String processName ) {
+        mProcessName = processName;
+    }
 
     public int getPss() {
         return mPss;

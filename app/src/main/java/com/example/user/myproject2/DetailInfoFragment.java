@@ -34,6 +34,7 @@ public class DetailInfoFragment extends Fragment {
     private TextView mPackageName;
     private int mProcessId;
     private int mMemoryPss;
+    private String mProcessName;
 
     public DetailInfoFragment() {
         // Required empty public constructor
@@ -64,7 +65,9 @@ public class DetailInfoFragment extends Fragment {
             mPackageName = detailInfo.getPackageName();
             mProcessId = detailInfo.getPid();
             mMemoryPss = detailInfo.getPss();
-            Log.d( CLASS_NAME, "onCreate() starts. [mPackageName/mProcessId/mMemoryPss : "+ mPackageName + "/ "+ mProcessId +" / "+mMemoryPss+"]" );
+            mProcessName = detailInfo.getProcessName();
+            Log.d( CLASS_NAME, "onCreate() starts. [mPackageName/mProcessId/mMemoryPss/mProcessName : "+
+                    mPackageName.getText().toString() + "/ "+ mProcessId +" / "+mMemoryPss+" / "+mProcessName+"]" );
         }
     }
 
@@ -78,20 +81,26 @@ public class DetailInfoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d( CLASS_NAME, "onViewCreated() starts." );
-        TextView textViewName = view.findViewById( R.id.app_name ); //package name
+        //package name with icon
+        TextView textViewName = view.findViewById( R.id.app_name );
         textViewName.setText( mPackageName.getText().toString() );
         Drawable[] drawable = mPackageName.getCompoundDrawables();
         AtomicReference<Drawable> icon = new AtomicReference<>();
         icon.set( drawable[0] );
         textViewName.setCompoundDrawables( icon.get(), null, null, null );
+        //process id
         TextView textViewId = view.findViewById( R.id.pid ); //process id
-        textViewId.setText( Integer.toString( mProcessId ) );
+        textViewId.setText( "Process ID : "+Integer.toString( mProcessId ) );
+        //process name
+        TextView textViewProcName = view.findViewById( R.id.process_name );
+        textViewProcName.setText( "Process Name : "+mProcessName );
+        //usage memory size (pss)
         TextView textViewPss = view.findViewById( R.id.mem_size );
-        textViewPss.setText( Integer.toString( mMemoryPss ) );
+        textViewPss.setText( "Usage Memory Size : "+Integer.toString( mMemoryPss ) );
 
-        Context context = this.getContext();
-        PackageManager packageManager = context.getPackageManager();
-        ActivityManager activityManager = (ActivityManager) context.getSystemService( Context.ACTIVITY_SERVICE );
+//        Context context = this.getContext();
+//        PackageManager packageManager = context.getPackageManager();
+//        ActivityManager activityManager = (ActivityManager) context.getSystemService( Context.ACTIVITY_SERVICE );
 
         super.onViewCreated(view, savedInstanceState);
     }
