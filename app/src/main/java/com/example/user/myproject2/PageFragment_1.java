@@ -84,13 +84,10 @@ public class PageFragment_1 extends Fragment {
                 Log.d( CLASS_NAME, "onItemClick() starts." );
                 ListView listView1 = (ListView)parent;
                 DetailInfo detailInfo = (DetailInfo) listView1.getAdapter().getItem( position );
-
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("DETAILINFO", detailInfo );
-
                 DetailInfoFragment detailInfoFragment = new DetailInfoFragment();
                 detailInfoFragment.setArguments( bundle );
-
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add( R.id.topViewGroup, detailInfoFragment );
@@ -116,6 +113,7 @@ public class PageFragment_1 extends Fragment {
             if (!runningApp.isEmpty()) {
                 int i = 0;
                 mArrayList.clear();
+                int pIds[] = new int[ 1 ];
                 for (ActivityManager.RunningAppProcessInfo app : runningApp) {
                     i++;
                     try {
@@ -138,16 +136,21 @@ public class PageFragment_1 extends Fragment {
                         DetailInfo detailInfo = new DetailInfo();
                         detailInfo.setPackageName( textView );
                         detailInfo.setPid( app.pid );
-                        mArrayList.add( detailInfo );
-
                         Log.d( CLASS_NAME, "packageName : " + textView.getText().toString() );
+                        //get memory info
+                        pIds[ 0 ] = app.pid;
+                        android.os.Debug.MemoryInfo[] memoryInfos = activityManager.getProcessMemoryInfo( pIds );
+                        for ( android.os.Debug.MemoryInfo info : memoryInfos ) {
+                            detailInfo.setPss( info.getTotalPss() );
+                            Log.d( CLASS_NAME, "pss : " + info.getTotalPss() );
+                        }
+                        mArrayList.add( detailInfo );
 
                     } catch (PackageManager.NameNotFoundException e) {
                         e.printStackTrace();
                         Log.d(CLASS_NAME, "exception of getapplicationinfo() : i=" + i + "processname=" + app.processName + " / " + "importance=" + app.importance);
                     }
                 }//for(app)
-
             }//if(!runningApp)
         }
     }

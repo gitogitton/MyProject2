@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link DetailInfoFragment#newInstance} factory method to
@@ -28,12 +31,9 @@ public class DetailInfoFragment extends Fragment {
 
     private final String CLASS_NAME = getClass().getSimpleName();
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
+    private TextView mPackageName;
+    private int mProcessId;
+    private int mMemoryPss;
 
     public DetailInfoFragment() {
         // Required empty public constructor
@@ -61,8 +61,10 @@ public class DetailInfoFragment extends Fragment {
         Bundle bundle = getArguments();
         DetailInfo detailInfo = (DetailInfo) bundle.getSerializable( "DETAILINFO" );
         if ( null!=detailInfo) {
-            mParam1 = detailInfo.getPackageName().getText().toString();
-            Log.d( CLASS_NAME, "onCreate() starts. [mParam1 : "+ mParam1 + "]" );
+            mPackageName = detailInfo.getPackageName();
+            mProcessId = detailInfo.getPid();
+            mMemoryPss = detailInfo.getPss();
+            Log.d( CLASS_NAME, "onCreate() starts. [mPackageName/mProcessId/mMemoryPss : "+ mPackageName + "/ "+ mProcessId +" / "+mMemoryPss+"]" );
         }
     }
 
@@ -76,23 +78,21 @@ public class DetailInfoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d( CLASS_NAME, "onViewCreated() starts." );
-        TextView textView = view.findViewById( R.id.app_name );
-        textView.setText( mParam1 );
+        TextView textViewName = view.findViewById( R.id.app_name ); //package name
+        textViewName.setText( mPackageName.getText().toString() );
+        Drawable[] drawable = mPackageName.getCompoundDrawables();
+        AtomicReference<Drawable> icon = new AtomicReference<>();
+        icon.set( drawable[0] );
+        textViewName.setCompoundDrawables( icon.get(), null, null, null );
+        TextView textViewId = view.findViewById( R.id.pid ); //process id
+        textViewId.setText( Integer.toString( mProcessId ) );
+        TextView textViewPss = view.findViewById( R.id.mem_size );
+        textViewPss.setText( Integer.toString( mMemoryPss ) );
+
         Context context = this.getContext();
         PackageManager packageManager = context.getPackageManager();
         ActivityManager activityManager = (ActivityManager) context.getSystemService( Context.ACTIVITY_SERVICE );
 
-//        ActivityManager.RunningAppProcessInfo
-
-
-        try {
-            Log.d( CLASS_NAME, "表示するアプリ名称：" + mParam1 );
-            ApplicationInfo applicationInfo = packageManager.getApplicationInfo( mParam1, 0 );
-        }
-        catch ( PackageManager.NameNotFoundException e ) {
-            e.printStackTrace();
-//            Log.d(CLASS_NAME, "exception of getapplicationinfo() : ", "processname=" + app.processName + " / " + "importance=" + app.importance);
-        }
         super.onViewCreated(view, savedInstanceState);
     }
 }

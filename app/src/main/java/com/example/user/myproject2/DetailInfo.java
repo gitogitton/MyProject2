@@ -15,6 +15,15 @@ public class DetailInfo implements Serializable {
 
     private TextView mPackageName;
     private int mPid;
+    private int mPss;
+
+    public int getPss() {
+        return mPss;
+    }
+
+    public void setPss( int pss ) {
+        mPss = pss;
+    }
 
     public TextView getPackageName() {
         return mPackageName;

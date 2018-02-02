@@ -3,18 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:theme="@style/AppTheme"
     tools:context="com.example.user.myproject2.DetailInfoFragment">
+
+    <TextView
+        android:id="@+id/sub_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:paddingStart="5sp"
+        android:paddingEnd="5sp"
+        android:text="詳細情報" />
 
     <TextView
         android:id="@+id/app_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
         android:text="@string/hello_blank_fragment" />
+
+    <TextView
+        android:id="@+id/pid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:paddingStart="5sp"
+        android:paddingEnd="5sp"
+        android:text="@string/error" />
 
     <TextView
         android:id="@+id/mem_size"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:paddingStart="5sp"
+        android:paddingEnd="5sp"
         android:text="@string/error" />
 
 </LinearLayout>

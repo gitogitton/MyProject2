@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle( "アプリリスト" );
         setSupportActionBar(toolbar); //ToolbarはAPI21からのサポート。API19だからActionBarをサポートする。
 //        mTabLayout = findViewById(R.id.tab);
 //        mTabLayout.setupWithViewPager(mViewPager); //TabLayoutとViewPagerを連動させる
