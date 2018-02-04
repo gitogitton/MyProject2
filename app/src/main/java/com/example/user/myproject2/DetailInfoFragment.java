@@ -90,18 +90,13 @@ public class DetailInfoFragment extends Fragment {
         textViewName.setCompoundDrawables( icon.get(), null, null, null );
         //process id
         TextView textViewId = view.findViewById( R.id.pid ); //process id
-        textViewId.setText( "Process ID : "+Integer.toString( mProcessId ) );
+        textViewId.setText( "* Process ID *\n"+Integer.toString( mProcessId ) );
         //process name
         TextView textViewProcName = view.findViewById( R.id.process_name );
-        textViewProcName.setText( "Process Name : "+mProcessName );
+        textViewProcName.setText( "* Process Name *\n"+mProcessName );
         //usage memory size (pss)
         TextView textViewPss = view.findViewById( R.id.mem_size );
-        textViewPss.setText( "Usage Memory Size : "+Integer.toString( mMemoryPss ) );
-
-//        Context context = this.getContext();
-//        PackageManager packageManager = context.getPackageManager();
-//        ActivityManager activityManager = (ActivityManager) context.getSystemService( Context.ACTIVITY_SERVICE );
-
+        textViewPss.setText( "* Usage Memory Size (KB ?) *\n"+Integer.toString( mMemoryPss ) );
         super.onViewCreated(view, savedInstanceState);
     }
 }

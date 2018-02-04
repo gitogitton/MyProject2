@@ -27,7 +27,7 @@
         android:id="@+id/pid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:paddingStart="15sp"
         android:paddingEnd="5sp"
         android:text="@string/error" />
@@ -36,7 +36,7 @@
         android:id="@+id/process_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:paddingStart="15sp"
         android:paddingEnd="5sp"
         android:text="@string/error" />
@@ -45,7 +45,7 @@
         android:id="@+id/mem_size"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:paddingStart="15sp"
         android:paddingEnd="5sp"
         android:text="@string/error" />
