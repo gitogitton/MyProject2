@@ -17,6 +17,16 @@ public class DetailInfo implements Serializable {
     private int mPid;
     private int mPss;
     private String mProcessName;
+    private String mClassName;
+
+
+    public String getClassName() {
+        return mClassName;
+    }
+
+    public void setClassName( String className ) {
+        this.mClassName = mClassName;
+    }
 
     public String getProcessName() {
         return mProcessName;

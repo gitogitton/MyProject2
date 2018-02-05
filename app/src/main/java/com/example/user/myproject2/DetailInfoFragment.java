@@ -35,6 +35,7 @@ public class DetailInfoFragment extends Fragment {
     private int mProcessId;
     private int mMemoryPss;
     private String mProcessName;
+    private String mClassName;
 
     public DetailInfoFragment() {
         // Required empty public constructor
@@ -66,8 +67,9 @@ public class DetailInfoFragment extends Fragment {
             mProcessId = detailInfo.getPid();
             mMemoryPss = detailInfo.getPss();
             mProcessName = detailInfo.getProcessName();
+            mClassName = detailInfo.getClassName();
             Log.d( CLASS_NAME, "onCreate() starts. [mPackageName/mProcessId/mMemoryPss/mProcessName : "+
-                    mPackageName.getText().toString() + "/ "+ mProcessId +" / "+mMemoryPss+" / "+mProcessName+"]" );
+                    mPackageName.getText().toString() + "/ "+ mProcessId +" / "+mMemoryPss+" / "+mProcessName+" / "+mClassName+"]" );
         }
     }
 
@@ -96,7 +98,10 @@ public class DetailInfoFragment extends Fragment {
         textViewProcName.setText( "* Process Name *\n"+mProcessName );
         //usage memory size (pss)
         TextView textViewPss = view.findViewById( R.id.mem_size );
-        textViewPss.setText( "* Usage Memory Size (KB ?) *\n"+Integer.toString( mMemoryPss ) );
+        textViewPss.setText( "* Usage Memory Size (KB ?) *\n"+String.format( "%d", mMemoryPss ) );
+        //class name
+        TextView textViewClass = view.findViewById( R.id.class_name );
+        textViewClass.setText( "* Class Name *\n"+mClassName+" (取り方を間違えてる・・・ようだ)" );
         super.onViewCreated(view, savedInstanceState);
     }
 }
