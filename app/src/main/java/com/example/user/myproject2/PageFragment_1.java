@@ -1,7 +1,6 @@
 package com.example.user.myproject2;
 
 import android.app.ActivityManager;
-//import android.app.FragmentManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -119,12 +118,12 @@ public class PageFragment_1 extends Fragment {
                     try {
                         ApplicationInfo applicationInfo = packageManager.getApplicationInfo(app.processName, 0);
                         //set application name.
-                        String packageName = (String)packageManager.getApplicationLabel(applicationInfo);
+                        String packageName = (String)packageManager.getApplicationLabel( applicationInfo );
                         TextView textView = new TextView( context );
                         textView.setText( packageName );
                         //set icon.
                         AtomicReference<Drawable> icon = new AtomicReference<>();
-                        Drawable applicationIcon = packageManager.getApplicationIcon(applicationInfo);
+                        Drawable applicationIcon = packageManager.getApplicationIcon( applicationInfo );
                         icon.set(applicationIcon);
                         //ICONの表示位置を設定 (引数：座標 x, 座標 y, 幅, 高さ)
 //                                Log.d(CLASS_NAME, "size of icon (w/h) : "+icon.get().getIntrinsicWidth()+" / "+icon.get().getIntrinsicHeight());
@@ -137,7 +136,7 @@ public class PageFragment_1 extends Fragment {
                         detailInfo.setPackageName( textView );
                         detailInfo.setPid( app.pid );
                         detailInfo.setProcessName( app.processName );
-                        detailInfo.setClassName( app.getClass().getName() );
+                        detailInfo.setClassName( applicationInfo.className );
                         Log.d( CLASS_NAME, "packageName : " + textView.getText().toString() );
                         //get memory info
                         pIds[ 0 ] = app.pid;

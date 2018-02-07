@@ -101,7 +101,7 @@ public class DetailInfoFragment extends Fragment {
         textViewPss.setText( "* Usage Memory Size (KB ?) *\n"+String.format( "%d", mMemoryPss ) );
         //class name
         TextView textViewClass = view.findViewById( R.id.class_name );
-        textViewClass.setText( "* Class Name *\n"+mClassName+" (取り方を間違えてる・・・ようだ)" );
+        textViewClass.setText( "* Class Name *\n"+mClassName );
         super.onViewCreated(view, savedInstanceState);
     }
 }

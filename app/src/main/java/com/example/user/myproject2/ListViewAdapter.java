@@ -53,7 +53,7 @@ public class ListViewAdapter extends ArrayAdapter<DetailInfo> {
             textView.setCompoundDrawables(icon.get(), null, null, null); //TextViewにアイコンセット（四辺(left, top, right, bottom)に対して別個にアイコンを描画できる）
             //text
             textView.setText( detailInfo.getPackageName().getText() );
-            Log.d( CLASS_NAME, "packageName Text : " + detailInfo.getPackageName().getText() );
+            //Log.d( CLASS_NAME, "packageName Text : " + detailInfo.getPackageName().getText() );
         } else {
             Log.d(CLASS_NAME, "textView is null at getView().");
         }//if(textView)

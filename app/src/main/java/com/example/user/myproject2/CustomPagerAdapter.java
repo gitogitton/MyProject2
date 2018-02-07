@@ -32,7 +32,7 @@ public class CustomPagerAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        Log.d(CLASS_NAME, "getCount() start.");
+//        Log.d(CLASS_NAME, "getCount() start.");
         return pageTitle.length;
     }
 

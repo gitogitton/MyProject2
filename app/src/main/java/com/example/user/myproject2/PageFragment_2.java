@@ -3,12 +3,15 @@ package com.example.user.myproject2;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,8 +33,11 @@ import static android.content.Context.ACTIVITY_SERVICE;
 
 public class PageFragment_2 extends Fragment {
 
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private final String CLASS_NAME = getClass().getSimpleName();
-//    protected static final String ARG_PARAM1 = "param1";
+    //    protected static final String ARG_PARAM1 = "param1";
     private ArrayList<DetailInfo> mArrayList = new ArrayList<>();
 
     public PageFragment_2() {
@@ -39,22 +45,15 @@ public class PageFragment_2 extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        Log.d(CLASS_NAME, "onCreate() start. savedInstanceState->"+savedInstanceState);
-        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            int param1 = getArguments().getInt(ARG_PARAM1);
-//        }
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(CLASS_NAME, "onCreateView() start. savedInstanceState->"+savedInstanceState);
+
         // Inflate the layout for this fragment
 //        if (null!=savedInstanceState) {
 //            int page = getArguments().getInt(ARG_PARAM1, 0);
 //        }
-        return inflater.inflate(R.layout.fragment_page, container, false);
+
+        return inflater.inflate( R.layout.fragment_page, container, false );
     }
 
     /**
@@ -70,48 +69,12 @@ public class PageFragment_2 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d(CLASS_NAME, "onViewCreated() start.");
-        Context context = this.getContext();
-        ActivityManager activityManager = (ActivityManager) context.getSystemService( ACTIVITY_SERVICE );
-        ArrayList<DetailInfo> arrayList = new ArrayList<>();
-        if (null != activityManager) {
-            List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
-            PackageManager packageManager = context.getPackageManager();
-            Log.d(CLASS_NAME, "running appl count : " + runningApp.size());
-            if (!runningApp.isEmpty()) {
-                arrayList.clear();
-                int i = 0;
-                for ( ActivityManager.RunningAppProcessInfo app : runningApp ) {
-                    i++;
-                    try {
-                        ApplicationInfo applicationInfo = packageManager.getApplicationInfo(app.processName, 0);
-                        //set application name.
-                        String packageName = (String)packageManager.getApplicationLabel(applicationInfo);
-                        TextView textView = new TextView( context );
-                        textView.setText( packageName );
-                        //set icon.
-                        AtomicReference<Drawable> icon = new AtomicReference<>();
-                        Drawable applicationIcon = packageManager.getApplicationIcon(applicationInfo);
-                        icon.set(applicationIcon);
-                        //ICONの表示位置を設定 (引数：座標 x, 座標 y, 幅, 高さ)
-//                                Log.d(CLASS_NAME, "size of icon (w/h) : "+icon.get().getIntrinsicWidth()+" / "+icon.get().getIntrinsicHeight());
-//iconサイズそのままだから・・・                                icon.get().setBounds(0, 0, icon.get().getIntrinsicWidth(), icon.get().getIntrinsicHeight());
-                        icon.get().setBounds(0, 0, 72, 72);
-                        //TextViewにアイコンセット（四辺(left, top, right, bottom)に対して別個にアイコンを描画できる）
-                        textView.setCompoundDrawables(icon.get(), null, null, null);
-                        //add new data to listview array.
-                        DetailInfo detailInfo = new DetailInfo();
-                        detailInfo.setPackageName( textView );
-                        detailInfo.setPid( app.pid );
-                        mArrayList.add( detailInfo );
-                    } catch (PackageManager.NameNotFoundException e) {
-//                        e.printStackTrace();
-//                        Log.d(CLASS_NAME, "exception of getapplicationinfo() : i=" + i + "processname=" + app.processName + " / " + "importance=" + app.importance);
-                    }
-                }//for(app)
-            }//if(!runningApp)
-        }
 
-        ListViewAdapter listViewAdapter = new ListViewAdapter( this.getContext(), R.layout.fragment_page, R.id.list_row_text, arrayList );
+        setInstalledProcess();
+
+        Context context = getActivity();
+
+        ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
         ListView listView = view.findViewById( R.id.process_list );
         listView.setAdapter( listViewAdapter );
 
@@ -119,35 +82,56 @@ public class PageFragment_2 extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//                // 詳細画面へ値を渡す
-//                DetailFragment fragment = new DetailFragment();
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("selected",position);
-//                fragment.setArguments(bundle);
-//                // 詳細画面を呼び出す
-//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                FragmentTransaction transaction = fragmentManager.beginTransaction();
-//                transaction.replace(R.id.textView, fragment);
-//                // 戻るボタンで戻ってこれるように
-//                transaction.addToBackStack(null);
-//                transaction.commit();
+                Log.d( CLASS_NAME, "onItemClick() starts." );
+                ListView listView1 = (ListView)parent;
+                DetailInfo detailInfo = (DetailInfo) listView1.getAdapter().getItem( position );
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("DETAILINFO", detailInfo );
+                DetailInfoFragment detailInfoFragment = new DetailInfoFragment();
+                detailInfoFragment.setArguments( bundle );
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add( R.id.topViewGroup, detailInfoFragment );
+                fragmentTransaction.addToBackStack( null );
+                fragmentTransaction.commit();
+                fragmentManager.executePendingTransactions(); // FragmentのTransaction処理の完了同期待ち（必須ではない）
             }
         });
+    }
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(CLASS_NAME, "onItemClick()");
-            }
-        });
+    private void setInstalledProcess() {
+        Log.d(CLASS_NAME, "setInstalledProcess() start");
+        Context context = this.getContext();
+        PackageManager packageManager = context.getPackageManager();
+        List<ApplicationInfo> applicationInfo = packageManager.getInstalledApplications( PackageManager.GET_META_DATA );
+        mArrayList.clear();
+        for ( ApplicationInfo info : applicationInfo ) {
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            //Long touch すると onItemClick() も発生する。
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(CLASS_NAME, "onItemLongClick()");
-                return false;
-            }
-        });
+            //set application name.
+            String packageName = (String)packageManager.getApplicationLabel( info );
+            TextView textView = new TextView( context );
+            textView.setText( packageName );
+
+            //set icon.
+            AtomicReference<Drawable> icon = new AtomicReference<>();
+            Drawable applicationIcon = packageManager.getApplicationIcon( info );
+            icon.set( applicationIcon );
+            //ICONの表示位置を設定 (引数：座標 x, 座標 y, 幅, 高さ)
+//                                Log.d(CLASS_NAME, "size of icon (w/h) : "+icon.get().getIntrinsicWidth()+" / "+icon.get().getIntrinsicHeight());
+//iconサイズそのままだから・・・                                icon.get().setBounds(0, 0, icon.get().getIntrinsicWidth(), icon.get().getIntrinsicHeight());
+            icon.get().setBounds(0, 0, 72, 72);
+            //TextViewにアイコンセット（四辺(left, top, right, bottom)に対して別個にアイコンを描画できる）
+            textView.setCompoundDrawables(icon.get(), null, null, null);
+
+            //add new data to listview array.
+            DetailInfo detailInfo = new DetailInfo();
+            detailInfo.setPackageName( textView );
+            detailInfo.setPid( 0 );
+            detailInfo.setProcessName( "(this is installed apl list." );
+            detailInfo.setClassName( info.className );
+            detailInfo.setPss( 0 );
+            Log.d( CLASS_NAME, "packageName / className : " + textView.getText().toString() + " / " + info.className );
+            mArrayList.add( detailInfo );
+        } //for (applicationInfo)
     }
 }
