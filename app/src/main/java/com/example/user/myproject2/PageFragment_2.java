@@ -130,6 +130,7 @@ public class PageFragment_2 extends Fragment {
             detailInfo.setProcessName( "(this is installed apl list." );
             detailInfo.setClassName( info.className );
             detailInfo.setPss( 0 );
+            detailInfo.setDetailPkgName( info.packageName );
             Log.d( CLASS_NAME, "packageName / className : " + textView.getText().toString() + " / " + info.className );
             mArrayList.add( detailInfo );
         } //for (applicationInfo)

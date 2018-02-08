@@ -36,6 +36,7 @@ public class DetailInfoFragment extends Fragment {
     private int mMemoryPss;
     private String mProcessName;
     private String mClassName;
+    private String mPckgDetailName;
 
     public DetailInfoFragment() {
         // Required empty public constructor
@@ -68,8 +69,9 @@ public class DetailInfoFragment extends Fragment {
             mMemoryPss = detailInfo.getPss();
             mProcessName = detailInfo.getProcessName();
             mClassName = detailInfo.getClassName();
-            Log.d( CLASS_NAME, "onCreate() starts. [mPackageName/mProcessId/mMemoryPss/mProcessName : "+
-                    mPackageName.getText().toString() + "/ "+ mProcessId +" / "+mMemoryPss+" / "+mProcessName+" / "+mClassName+"]" );
+            mPckgDetailName = detailInfo.getDetailPkgName();
+            Log.d( CLASS_NAME, "onCreate() starts. [ mPackageName/mProcessId/mMemoryPss/mProcessName/mPckgDetailName : "+
+                    mPackageName.getText().toString() + "/ "+ mProcessId +" / "+mMemoryPss+" / "+mProcessName+" / "+mClassName+" / "+mPckgDetailName+" ]" );
         }
     }
 
@@ -90,6 +92,9 @@ public class DetailInfoFragment extends Fragment {
         AtomicReference<Drawable> icon = new AtomicReference<>();
         icon.set( drawable[0] );
         textViewName.setCompoundDrawables( icon.get(), null, null, null );
+        //package name (detail)
+        TextView textViewDetailName = view.findViewById( R.id.pkgName );
+        textViewDetailName.setText( "( "+ mPckgDetailName +" )" );
         //process id
         TextView textViewId = view.findViewById( R.id.pid ); //process id
         textViewId.setText( "* Process ID *\n"+Integer.toString( mProcessId ) );

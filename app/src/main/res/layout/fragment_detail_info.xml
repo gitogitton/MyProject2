@@ -24,6 +24,15 @@
         android:text="@string/hello_blank_fragment" />
 
     <TextView
+        android:id="@+id/pkgName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:paddingStart="15sp"
+        android:paddingEnd="5sp"
+        android:text="@string/error" />
+
+    <TextView
         android:id="@+id/pid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

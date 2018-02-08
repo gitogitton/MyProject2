@@ -137,6 +137,7 @@ public class PageFragment_1 extends Fragment {
                         detailInfo.setPid( app.pid );
                         detailInfo.setProcessName( app.processName );
                         detailInfo.setClassName( applicationInfo.className );
+                        detailInfo.setDetailPkgName( applicationInfo.packageName );
                         Log.d( CLASS_NAME, "packageName : " + textView.getText().toString() );
                         //get memory info
                         pIds[ 0 ] = app.pid;
