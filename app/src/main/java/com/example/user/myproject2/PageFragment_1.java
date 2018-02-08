@@ -104,11 +104,9 @@ public class PageFragment_1 extends Fragment {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
 
         if (null != activityManager) {
-
             List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
             PackageManager packageManager = context.getPackageManager();
             Log.d(CLASS_NAME, "running appl count : " + runningApp.size());
-
             if (!runningApp.isEmpty()) {
                 int i = 0;
                 mArrayList.clear();
@@ -136,7 +134,11 @@ public class PageFragment_1 extends Fragment {
                         detailInfo.setPackageName( textView );
                         detailInfo.setPid( app.pid );
                         detailInfo.setProcessName( app.processName );
+
                         detailInfo.setClassName( applicationInfo.className );
+                        detailInfo.setClassSimpleName( "" ); //x
+                        detailInfo.setClassCanonicalName( "" ); //X
+
                         detailInfo.setDetailPkgName( applicationInfo.packageName );
                         Log.d( CLASS_NAME, "packageName : " + textView.getText().toString() );
                         //get memory info

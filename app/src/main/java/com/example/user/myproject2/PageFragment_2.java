@@ -103,18 +103,20 @@ public class PageFragment_2 extends Fragment {
         Log.d(CLASS_NAME, "setInstalledProcess() start");
         Context context = this.getContext();
         PackageManager packageManager = context.getPackageManager();
-        List<ApplicationInfo> applicationInfo = packageManager.getInstalledApplications( PackageManager.GET_META_DATA );
+//        List<ApplicationInfo> applicationInfo = packageManager.getInstalledApplications( PackageManager.GET_META_DATA );
+        List<PackageInfo> packageInfo = packageManager.getInstalledPackages( PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES );
         mArrayList.clear();
-        for ( ApplicationInfo info : applicationInfo ) {
+//        for ( ApplicationInfo info : applicationInfo ) {
+        for ( PackageInfo info : packageInfo ) {
 
             //set application name.
-            String packageName = (String)packageManager.getApplicationLabel( info );
+            String packageName = packageManager.getApplicationLabel( info.applicationInfo ).toString();
             TextView textView = new TextView( context );
             textView.setText( packageName );
 
             //set icon.
             AtomicReference<Drawable> icon = new AtomicReference<>();
-            Drawable applicationIcon = packageManager.getApplicationIcon( info );
+            Drawable applicationIcon = packageManager.getApplicationIcon( info.applicationInfo );
             icon.set( applicationIcon );
             //ICONの表示位置を設定 (引数：座標 x, 座標 y, 幅, 高さ)
 //                                Log.d(CLASS_NAME, "size of icon (w/h) : "+icon.get().getIntrinsicWidth()+" / "+icon.get().getIntrinsicHeight());
@@ -127,11 +129,16 @@ public class PageFragment_2 extends Fragment {
             DetailInfo detailInfo = new DetailInfo();
             detailInfo.setPackageName( textView );
             detailInfo.setPid( 0 );
-            detailInfo.setProcessName( "(this is installed apl list." );
-            detailInfo.setClassName( info.className );
+            detailInfo.setProcessName( "   - out of scope -" );
+            if( packageManager.getLaunchIntentForPackage( info.packageName) != null ) {
+                String className = packageManager.getLaunchIntentForPackage( info.packageName ).getComponent().getClassName();
+                detailInfo.setClassName(className);
+            }
+            else {
+                detailInfo.setClassName( "   - not launcher package -" );
+            }
             detailInfo.setPss( 0 );
             detailInfo.setDetailPkgName( info.packageName );
-            Log.d( CLASS_NAME, "packageName / className : " + textView.getText().toString() + " / " + info.className );
             mArrayList.add( detailInfo );
         } //for (applicationInfo)
     }

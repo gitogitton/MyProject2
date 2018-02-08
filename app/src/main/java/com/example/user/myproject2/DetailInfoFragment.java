@@ -1,10 +1,6 @@
 package com.example.user.myproject2;
 
 
-import android.app.ActivityManager;
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,6 +33,8 @@ public class DetailInfoFragment extends Fragment {
     private String mProcessName;
     private String mClassName;
     private String mPckgDetailName;
+    private String mSimpleClassName;
+    private String mCanonicalClassName;;
 
     public DetailInfoFragment() {
         // Required empty public constructor
@@ -68,10 +66,14 @@ public class DetailInfoFragment extends Fragment {
             mProcessId = detailInfo.getPid();
             mMemoryPss = detailInfo.getPss();
             mProcessName = detailInfo.getProcessName();
-            mClassName = detailInfo.getClassName();
             mPckgDetailName = detailInfo.getDetailPkgName();
-            Log.d( CLASS_NAME, "onCreate() starts. [ mPackageName/mProcessId/mMemoryPss/mProcessName/mPckgDetailName : "+
-                    mPackageName.getText().toString() + "/ "+ mProcessId +" / "+mMemoryPss+" / "+mProcessName+" / "+mClassName+" / "+mPckgDetailName+" ]" );
+            mClassName = detailInfo.getClassName();
+            mSimpleClassName = detailInfo.getClassCanonicalName();
+            mCanonicalClassName = detailInfo.getClassCanonicalName();
+            Log.d( CLASS_NAME, "onCreate() [ mPackageName/mProcessId/mMemoryPss/mProcessName/mPckgDetailName"+
+                    mPackageName.getText().toString() + "/ "+ mProcessId +" / "+mMemoryPss+" / "+mProcessName+" ]" );
+            Log.d( CLASS_NAME, "onCreate() [ mClassName/mSimpleClassName/mCanonicalClassName : "+
+                    mClassName+" / "+mSimpleClassName+" / "+mCanonicalClassName+" ]" );
         }
     }
 
@@ -94,7 +96,7 @@ public class DetailInfoFragment extends Fragment {
         textViewName.setCompoundDrawables( icon.get(), null, null, null );
         //package name (detail)
         TextView textViewDetailName = view.findViewById( R.id.pkgName );
-        textViewDetailName.setText( "( "+ mPckgDetailName +" )" );
+        textViewDetailName.setText( "("+ mPckgDetailName +")" );
         //process id
         TextView textViewId = view.findViewById( R.id.pid ); //process id
         textViewId.setText( "* Process ID *\n"+Integer.toString( mProcessId ) );
@@ -107,6 +109,13 @@ public class DetailInfoFragment extends Fragment {
         //class name
         TextView textViewClass = view.findViewById( R.id.class_name );
         textViewClass.setText( "* Class Name *\n"+mClassName );
+        //class simple name
+        TextView textViewSimpleClass = view.findViewById( R.id.class_simpleName );
+        textViewSimpleClass.setText( "* Class S Name *\n" + mSimpleClassName );
+        //class canonical name
+        TextView textViewCanonicalClass = view.findViewById( R.id.class_canonicalName );
+        textViewCanonicalClass.setText( "* Class C Name *\n" + mCanonicalClassName );
+
         super.onViewCreated(view, savedInstanceState);
     }
 }
