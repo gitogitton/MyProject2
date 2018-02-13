@@ -45,26 +45,31 @@ public class MainActivity extends AppCompatActivity {
         final CustomPagerAdapter fragmentPagerAdapter = new CustomPagerAdapter(mFragmentManager);
         viewPager.setAdapter( fragmentPagerAdapter );
 
-//        mViewPager.addOnPageChangeListener(this); //ページ切り替え、ページスクロール時に呼ばれるリスナー登録
+        viewPager.addOnPageChangeListener(
+                new ViewPager.OnPageChangeListener() {
 
+                    //現在のページがスクロールされたときに呼び出されます。
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                        Log.d(CLASS_NAME, "onPageScrolled() : position = "+position);
+                    }
+                    //新しいページが選択されると呼び出されます。
+                    @Override
+                    public void onPageSelected(int position) {
+                        Log.d(CLASS_NAME, "onPageSelected() start. position="+position);
+                        //PageFragment_2 のデータを表示したい！！！
+                    }
+                    //スクロール状態が変更されたときに呼び出されます。
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+                        Log.d(CLASS_NAME, "onPageScrollStateChanged() start. state="+state);
+                    }
+
+                }
+        ); //ページ切り替え、ページスクロール時に呼ばれるリスナー登録
     }
 }
 
-//    //現在のページがスクロールされたときに呼び出されます。
-//    @Override
-//    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//        Log.d(CLASS_NAME, "onPageScrolled() : position = "+position);
-//    }
-//    //新しいページが選択されると呼び出されます。
-//    @Override
-//    public void onPageSelected(int position) {
-//        Log.d(CLASS_NAME, "onPageSelected() start. position="+position);
-//    }
-//    //スクロール状態が変更されたときに呼び出されます。
-//    @Override
-//    public void onPageScrollStateChanged(int state) {
-//        Log.d(CLASS_NAME, "onPageScrollStateChanged() start. state="+state);
-//    }
 //
 //    @Override
 //    public void onFragmentInteraction(Uri uri) {

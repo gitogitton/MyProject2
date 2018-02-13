@@ -20,6 +20,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -149,12 +152,12 @@ public class PageFragment_1 extends Fragment {
                             Log.d( CLASS_NAME, "pss : " + info.getTotalPss() );
                         }
                         mArrayList.add( detailInfo );
-
                     } catch (PackageManager.NameNotFoundException e) {
                         e.printStackTrace();
                         Log.d(CLASS_NAME, "exception of getapplicationinfo() : i=" + i + "processname=" + app.processName + " / " + "importance=" + app.importance);
                     }
                 }//for(app)
+                Collections.sort( mArrayList, new ListItemComparator() ); //mArrayListをアプリ名でソート
             }//if(!runningApp)
         }
     }

@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -69,11 +70,10 @@ public class PageFragment_2 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d(CLASS_NAME, "onViewCreated() start.");
-
-        setInstalledProcess();
-
+        mArrayList.clear();
+//データ表示のタイミングを最初の表示の時に移動する。
+//        setInstalledProcess();
         Context context = getActivity();
-
         ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
         ListView listView = view.findViewById( R.id.process_list );
         listView.setAdapter( listViewAdapter );
@@ -141,5 +141,6 @@ public class PageFragment_2 extends Fragment {
             detailInfo.setDetailPkgName( info.packageName );
             mArrayList.add( detailInfo );
         } //for (applicationInfo)
+        Collections.sort( mArrayList, new ListItemComparator() ); //mArrayListをソート
     }
 }
