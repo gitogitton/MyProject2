@@ -7,6 +7,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -38,8 +41,8 @@ public class PageFragment_2 extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
     private final String CLASS_NAME = getClass().getSimpleName();
-    //    protected static final String ARG_PARAM1 = "param1";
     private ArrayList<DetailInfo> mArrayList = new ArrayList<>();
+    private View mView;
 
     public PageFragment_2() {
         Log.d(CLASS_NAME, "constructor start (empty)");
@@ -54,7 +57,7 @@ public class PageFragment_2 extends Fragment {
 //            int page = getArguments().getInt(ARG_PARAM1, 0);
 //        }
 
-        return inflater.inflate( R.layout.fragment_page, container, false );
+        return inflater.inflate( R.layout.fragment_progressbar, container, false );
     }
 
     /**
@@ -73,30 +76,79 @@ public class PageFragment_2 extends Fragment {
         mArrayList.clear();
 //データ表示のタイミングを最初の表示の時に移動する。
 //        setInstalledProcess();
-        Context context = getActivity();
-        ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
-        ListView listView = view.findViewById( R.id.process_list );
-        listView.setAdapter( listViewAdapter );
+        mView = view;
+//        Context context = getActivity();
+//        ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
+//        ListView listView = mView.findViewById( R.id.process_list );
+//        listView.setAdapter( listViewAdapter );
+//
+//        // セルを選択されたら詳細画面フラグメント呼び出す
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+//                Log.d( CLASS_NAME, "onItemClick() starts." );
+//                ListView listView1 = (ListView)parent;
+//                DetailInfo detailInfo = (DetailInfo) listView1.getAdapter().getItem( position );
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("DETAILINFO", detailInfo );
+//                DetailInfoFragment detailInfoFragment = new DetailInfoFragment();
+//                detailInfoFragment.setArguments( bundle );
+//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.add( R.id.topViewGroup, detailInfoFragment );
+//                fragmentTransaction.addToBackStack( null );
+//                fragmentTransaction.commit();
+//                fragmentManager.executePendingTransactions(); // FragmentのTransaction処理の完了同期待ち（必須ではない）
+//            }
+//        });
+    }
 
-        // セルを選択されたら詳細画面フラグメント呼び出す
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Log.d( CLASS_NAME, "onItemClick() starts." );
-                ListView listView1 = (ListView)parent;
-                DetailInfo detailInfo = (DetailInfo) listView1.getAdapter().getItem( position );
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("DETAILINFO", detailInfo );
-                DetailInfoFragment detailInfoFragment = new DetailInfoFragment();
-                detailInfoFragment.setArguments( bundle );
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add( R.id.topViewGroup, detailInfoFragment );
-                fragmentTransaction.addToBackStack( null );
-                fragmentTransaction.commit();
-                fragmentManager.executePendingTransactions(); // FragmentのTransaction処理の完了同期待ち（必須ではない）
+    //ページが表示対象になった時のイベント
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        Log.d( CLASS_NAME, "setUserVisibleHint() starts. [ isVisibleToUser : " + isVisibleToUser + " ]" );
+        if ( isVisibleToUser ) {
+            if (mArrayList.isEmpty()) { //データ取得は一度だけにする。
+//                setInstalledProcess();
+//                Context context = getActivity();
+//                ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
+//                ListView listView = mView.findViewById( R.id.process_list );
+//                listView.setAdapter( listViewAdapter );
+
+                //バックグランドで処理する。表はクルクル画面（ProgressBar）の裏で。
+                HandlerThread handlerThread = new HandlerThread( "installedApplications" ); //スレッド生成
+                handlerThread.start(); //スレッド開始
+//                final Handler handler = new Handler( handlerThread.getLooper() ); //handlerThreadにメッセージを送るHandlerを作成
+                final Handler handler = new Handler(handlerThread.getLooper(), new Handler.Callback() {
+                    @Override
+                    public boolean handleMessage(Message msg) {
+                        Log.d( CLASS_NAME, "Handler.Callback handleMessage() start." );
+                        Log.d( CLASS_NAME, "msg what=" + msg.what+"/size="+msg.obj );
+                        return false;
+                    }
+                });
+                handler.post( new Runnable() { //handlerに処理をポストする（通知する）
+                    @Override
+                    public void run() {
+                        setInstalledProcess();
+                        Log.d( CLASS_NAME, "mArrayList.size : " + mArrayList.size() );
+
+//                        Context context = getActivity();
+//                        ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
+//                        ListView listView = mView.findViewById( R.id.process_list );
+//                        listView.setAdapter( listViewAdapter );
+
+                        Message message = Message.obtain();
+                        message.what = 1;
+                        int result = mArrayList.size();
+                        message.obj = result;
+                        handler.sendMessage( message );
+                    }
+                });
             }
-        });
+        }
+        else {
+        }
     }
 
     private void setInstalledProcess() {

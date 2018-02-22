@@ -20,7 +20,7 @@ public class ListItemComparator implements Comparator<DetailInfo> {
         }
         String str1 = o1.getPackageName().getText().toString();
         String str2 = o2.getPackageName().getText().toString();
-        Log.d( CLASS_NAME, "str1 / str2 : " + str1 + " / " + str2 );
+//        Log.d( CLASS_NAME, "str1 / str2 : " + str1 + " / " + str2 );
         return( str1.compareTo( str2 ) );
     }
 }
