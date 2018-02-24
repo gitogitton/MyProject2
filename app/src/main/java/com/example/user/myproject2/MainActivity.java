@@ -30,8 +30,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle( "アプリリスト" );
         setSupportActionBar(toolbar); //ToolbarはAPI21からのサポート。API19だからActionBarをサポートする。
+
 //        mTabLayout = findViewById(R.id.tab);
 //        mTabLayout.setupWithViewPager(mViewPager); //TabLayoutとViewPagerを連動させる
+
         final ViewPager viewPager = findViewById(R.id.view_pager);
         if ( 0 < viewPager.getChildCount() ) {
             PagerTitleStrip pagerTitleStrip = (PagerTitleStrip)viewPager.getChildAt( 0 );
@@ -69,9 +71,3 @@ public class MainActivity extends AppCompatActivity {
         ); //ページ切り替え、ページスクロール時に呼ばれるリスナー登録
     }
 }
-
-//
-//    @Override
-//    public void onFragmentInteraction(Uri uri) {
-//        Log.d(CLASS_NAME, "onFragmentInteraction() start. uri->"+uri);
-//    }

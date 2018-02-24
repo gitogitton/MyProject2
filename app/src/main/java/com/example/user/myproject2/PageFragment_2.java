@@ -13,8 +13,11 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -51,13 +55,7 @@ public class PageFragment_2 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(CLASS_NAME, "onCreateView() start. savedInstanceState->"+savedInstanceState);
-
-        // Inflate the layout for this fragment
-//        if (null!=savedInstanceState) {
-//            int page = getArguments().getInt(ARG_PARAM1, 0);
-//        }
-
-        return inflater.inflate( R.layout.fragment_progressbar, container, false );
+        return inflater.inflate( R.layout.fragment_page, container, false );
     }
 
     /**
@@ -74,33 +72,14 @@ public class PageFragment_2 extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d(CLASS_NAME, "onViewCreated() start.");
         mArrayList.clear();
-//データ表示のタイミングを最初の表示の時に移動する。
-//        setInstalledProcess();
         mView = view;
-//        Context context = getActivity();
-//        ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
-//        ListView listView = mView.findViewById( R.id.process_list );
-//        listView.setAdapter( listViewAdapter );
-//
-//        // セルを選択されたら詳細画面フラグメント呼び出す
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//                Log.d( CLASS_NAME, "onItemClick() starts." );
-//                ListView listView1 = (ListView)parent;
-//                DetailInfo detailInfo = (DetailInfo) listView1.getAdapter().getItem( position );
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("DETAILINFO", detailInfo );
-//                DetailInfoFragment detailInfoFragment = new DetailInfoFragment();
-//                detailInfoFragment.setArguments( bundle );
-//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.add( R.id.topViewGroup, detailInfoFragment );
-//                fragmentTransaction.addToBackStack( null );
-//                fragmentTransaction.commit();
-//                fragmentManager.executePendingTransactions(); // FragmentのTransaction処理の完了同期待ち（必須ではない）
-//            }
-//        });
+        FragmentActivity fragmentActivity = getActivity();
+        //ProgressBar 表示
+        ProgressBar progressBar = mView.findViewById( R.id.progressBar );
+        progressBar.setVisibility( View.VISIBLE );
+        //ListView 表示
+        ListView listView =  mView.findViewById( R.id.process_list );
+        listView.setVisibility( View.GONE );
     }
 
     //ページが表示対象になった時のイベント
@@ -108,51 +87,28 @@ public class PageFragment_2 extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         Log.d( CLASS_NAME, "setUserVisibleHint() starts. [ isVisibleToUser : " + isVisibleToUser + " ]" );
         if ( isVisibleToUser ) {
-            if (mArrayList.isEmpty()) { //データ取得は一度だけにする。
-//                setInstalledProcess();
-//                Context context = getActivity();
-//                ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
-//                ListView listView = mView.findViewById( R.id.process_list );
-//                listView.setAdapter( listViewAdapter );
-
-                //バックグランドで処理する。表はクルクル画面（ProgressBar）の裏で。
-                HandlerThread handlerThread = new HandlerThread( "installedApplications" ); //スレッド生成
-                handlerThread.start(); //スレッド開始
-//                final Handler handler = new Handler( handlerThread.getLooper() ); //handlerThreadにメッセージを送るHandlerを作成
-                final Handler handler = new Handler(handlerThread.getLooper(), new Handler.Callback() {
-                    @Override
-                    public boolean handleMessage(Message msg) {
-                        Log.d( CLASS_NAME, "Handler.Callback handleMessage() start." );
-                        Log.d( CLASS_NAME, "msg what=" + msg.what+"/size="+msg.obj );
-                        return false;
-                    }
-                });
-                handler.post( new Runnable() { //handlerに処理をポストする（通知する）
-                    @Override
-                    public void run() {
-                        setInstalledProcess();
-                        Log.d( CLASS_NAME, "mArrayList.size : " + mArrayList.size() );
-
-//                        Context context = getActivity();
-//                        ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
-//                        ListView listView = mView.findViewById( R.id.process_list );
-//                        listView.setAdapter( listViewAdapter );
-
-                        Message message = Message.obtain();
-                        message.what = 1;
-                        int result = mArrayList.size();
-                        message.obj = result;
-                        handler.sendMessage( message );
-                    }
-                });
-            }
+            if ( mArrayList.size()>0 ) { return; } //リスト取得済みなら処理しない。
+            //ProgressBar 表示
+            ProgressBar progressBar = mView.findViewById( R.id.progressBar );
+            progressBar.setVisibility( View.VISIBLE );
+            //インストールアプリのリスト取得
+            setInstalledPackages();
+            //ProgressBar 非表示
+            progressBar.setVisibility( View.GONE );
+            //ListView 表示
+            ListView listView =  mView.findViewById( R.id.process_list );
+            listView.setVisibility( View.VISIBLE );
+            //ListView データ表示
+            Context context = getActivity();
+            ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
+            listView.setAdapter( listViewAdapter );
         }
         else {
-        }
+        }//if ( isVisibleToUser )
     }
 
-    private void setInstalledProcess() {
-        Log.d(CLASS_NAME, "setInstalledProcess() start");
+    private void setInstalledPackages() {
+        Log.d(CLASS_NAME, "setInstalledPackages() start");
         Context context = this.getContext();
         PackageManager packageManager = context.getPackageManager();
 //        List<ApplicationInfo> applicationInfo = packageManager.getInstalledApplications( PackageManager.GET_META_DATA );

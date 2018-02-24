@@ -1,10 +1,12 @@
 package com.example.user.myproject2;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +21,13 @@ public class CustomPagerAdapter extends FragmentPagerAdapter {
     private final String[] pageTitle = {"Running Process", "Installed Application"};//, "Setting"}; //タブページのタイトル
     private final static int TAB_PAGE_RUNNING_PROCESS = 0;
     private final static int TAB_PAGE_INSTALLED_APPLICATION = 1;
+    private FragmentManager mFragmentManager;
 
     private final String CLASS_NAME =getClass().getSimpleName();
 
     CustomPagerAdapter(FragmentManager fm) {
         super(fm);
+        mFragmentManager = fm;
         Log.d(CLASS_NAME, "constructor start.");
     }
 
@@ -74,20 +78,4 @@ public class CustomPagerAdapter extends FragmentPagerAdapter {
                 return new PageFragment_2();
         }
     }
-
-//    /**
-//     * Determines whether a page View is associated with a specific key object
-//     * as returned by {@link #instantiateItem(ViewGroup, int)}. This method is
-//     * required for a PagerAdapter to function properly.
-//     *
-//     * @param view   Page View to check for association with <code>object</code>
-//     * @param object Object to check for association with <code>view</code>
-//     * @return true if <code>view</code> is associated with the key object <code>object</code>
-//     */
-//    @Override
-//    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-////        return false;
-//        return view == object;
-//    }
-
 }

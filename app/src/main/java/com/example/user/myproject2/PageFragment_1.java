@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -34,12 +36,9 @@ import static android.content.Context.ACTIVITY_SERVICE;
 
 public class PageFragment_1 extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
     private final String CLASS_NAME = getClass().getSimpleName();
-//    protected static final String ARG_PARAM1 = "param1";
     private ArrayList<DetailInfo> mArrayList = new ArrayList<>();
+    private View mView;
 
     public PageFragment_1() {
         Log.d(CLASS_NAME, "constructor start (empty)");
@@ -48,12 +47,7 @@ public class PageFragment_1 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(CLASS_NAME, "onCreateView() start. savedInstanceState->"+savedInstanceState);
-
         // Inflate the layout for this fragment
-//        if (null!=savedInstanceState) {
-//            int page = getArguments().getInt(ARG_PARAM1, 0);
-//        }
-
         return inflater.inflate( R.layout.fragment_page, container, false );
     }
 
@@ -70,13 +64,21 @@ public class PageFragment_1 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d(CLASS_NAME, "onViewCreated() start.");
-
+        mView = view;
+        //プログレスバー表示
+        ProgressBar progressBar = mView.findViewById( R.id.progressBar );
+        progressBar.setVisibility( View.VISIBLE );
+        //リストビュー表示
+        ListView listView = mView.findViewById( R.id.process_list );
+        listView.setVisibility( View.VISIBLE );
+        //実行中プロセスリスト取得
         setRunningProcess();
-
+        //プログレスバー非表示（viewを詰めて）
+        progressBar.setVisibility( View.GONE );
+        //リストビューデータ表示
         Context context = getActivity();
-
+        Log.d( CLASS_NAME, "mArrayList.size() = " + mArrayList.size() );
         ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
-        ListView listView = view.findViewById( R.id.process_list );
         listView.setAdapter( listViewAdapter );
 
         // セルを選択されたら詳細画面フラグメント呼び出す
@@ -100,17 +102,27 @@ public class PageFragment_1 extends Fragment {
         });
     }
 
+    //ページが表示対象になった時のイベント
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        Log.d( CLASS_NAME, "setUserVisibleHint() starts. [ isVisibleToUser : " + isVisibleToUser + " ]" );
+        if ( isVisibleToUser ) {
+        }
+        else {
+        }//if ( isVisibleToUser )
+    }
+
     private void setRunningProcess() {
         Log.d(CLASS_NAME, "setRunningProcess() start");
 
         Context context = this.getContext();
         ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
 
-        if (null != activityManager) {
+        if ( null != activityManager ) {
             List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
             PackageManager packageManager = context.getPackageManager();
             Log.d(CLASS_NAME, "running appl count : " + runningApp.size());
-            if (!runningApp.isEmpty()) {
+            if ( !runningApp.isEmpty() ) {
                 int i = 0;
                 mArrayList.clear();
                 int pIds[] = new int[ 1 ];
