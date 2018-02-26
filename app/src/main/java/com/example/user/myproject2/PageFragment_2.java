@@ -82,6 +82,25 @@ public class PageFragment_2 extends Fragment {
         //ListView 表示
         mListView =  mView.findViewById( R.id.process_list );
         mListView.setVisibility( View.GONE );
+        // セルを選択されたら詳細画面フラグメント呼び出す
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                Log.d( CLASS_NAME, "onItemClick() starts." );
+                ListView listView1 = (ListView)parent;
+                DetailInfo detailInfo = (DetailInfo) listView1.getAdapter().getItem( position );
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("DETAILINFO", detailInfo );
+                DetailInfoFragment detailInfoFragment = new DetailInfoFragment();
+                detailInfoFragment.setArguments( bundle );
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add( R.id.topViewGroup, detailInfoFragment );
+                fragmentTransaction.addToBackStack( null );
+                fragmentTransaction.commit();
+                fragmentManager.executePendingTransactions(); // FragmentのTransaction処理の完了同期待ち（必須ではない）
+            }
+        });
     }
 
     //ページが表示対象になった時のイベント

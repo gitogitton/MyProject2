@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,8 @@ public class PageFragment_1 extends Fragment {
     private final String CLASS_NAME = getClass().getSimpleName();
     private ArrayList<DetailInfo> mArrayList = new ArrayList<>();
     private View mView;
+    private ListView mListView;
+    private ProgressBar mProgressBar;
 
     public PageFragment_1() {
         Log.d(CLASS_NAME, "constructor start (empty)");
@@ -64,25 +67,26 @@ public class PageFragment_1 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d(CLASS_NAME, "onViewCreated() start.");
+        mArrayList.clear();
         mView = view;
         //プログレスバー表示
-        ProgressBar progressBar = mView.findViewById( R.id.progressBar );
-        progressBar.setVisibility( View.VISIBLE );
-        //リストビュー表示
-        ListView listView = mView.findViewById( R.id.process_list );
-        listView.setVisibility( View.VISIBLE );
-        //実行中プロセスリスト取得
-        setRunningProcess();
-        //プログレスバー非表示（viewを詰めて）
-        progressBar.setVisibility( View.GONE );
-        //リストビューデータ表示
+        mProgressBar = mView.findViewById( R.id.progressBar );
+        mProgressBar.setVisibility( View.VISIBLE );
+        //リストビュー非表示
+        mListView = mView.findViewById( R.id.process_list );
+        mListView.setVisibility( View.GONE );
+        setRunningProcess(); //実行中プロセスリスト取得
+        //ListView データ表示
         Context context = getActivity();
-        Log.d( CLASS_NAME, "mArrayList.size() = " + mArrayList.size() );
         ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
-        listView.setAdapter( listViewAdapter );
+        mListView.setAdapter( listViewAdapter );
+        //プログレスバー非表示
+        mProgressBar.setVisibility( View.GONE );
+        //リストビュー表示
+        mListView.setVisibility( View.VISIBLE );
 
         // セルを選択されたら詳細画面フラグメント呼び出す
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Log.d( CLASS_NAME, "onItemClick() starts." );
@@ -102,22 +106,10 @@ public class PageFragment_1 extends Fragment {
         });
     }
 
-    //ページが表示対象になった時のイベント
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        Log.d( CLASS_NAME, "setUserVisibleHint() starts. [ isVisibleToUser : " + isVisibleToUser + " ]" );
-        if ( isVisibleToUser ) {
-        }
-        else {
-        }//if ( isVisibleToUser )
-    }
-
     private void setRunningProcess() {
         Log.d(CLASS_NAME, "setRunningProcess() start");
-
         Context context = this.getContext();
         ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-
         if ( null != activityManager ) {
             List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
             PackageManager packageManager = context.getPackageManager();
