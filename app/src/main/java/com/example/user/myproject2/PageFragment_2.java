@@ -47,6 +47,8 @@ public class PageFragment_2 extends Fragment {
     private final String CLASS_NAME = getClass().getSimpleName();
     private ArrayList<DetailInfo> mArrayList = new ArrayList<>();
     private View mView;
+    private ListView mListView;
+    private ProgressBar mProgressBar;
 
     public PageFragment_2() {
         Log.d(CLASS_NAME, "constructor start (empty)");
@@ -75,11 +77,11 @@ public class PageFragment_2 extends Fragment {
         mView = view;
         FragmentActivity fragmentActivity = getActivity();
         //ProgressBar 表示
-        ProgressBar progressBar = mView.findViewById( R.id.progressBar );
-        progressBar.setVisibility( View.VISIBLE );
+        mProgressBar = mView.findViewById( R.id.progressBar );
+        mProgressBar.setVisibility( View.VISIBLE );
         //ListView 表示
-        ListView listView =  mView.findViewById( R.id.process_list );
-        listView.setVisibility( View.GONE );
+        mListView =  mView.findViewById( R.id.process_list );
+        mListView.setVisibility( View.GONE );
     }
 
     //ページが表示対象になった時のイベント
@@ -87,21 +89,30 @@ public class PageFragment_2 extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         Log.d( CLASS_NAME, "setUserVisibleHint() starts. [ isVisibleToUser : " + isVisibleToUser + " ]" );
         if ( isVisibleToUser ) {
-            if ( mArrayList.size()>0 ) { return; } //リスト取得済みなら処理しない。
-            //ProgressBar 表示
-            ProgressBar progressBar = mView.findViewById( R.id.progressBar );
-            progressBar.setVisibility( View.VISIBLE );
-            //インストールアプリのリスト取得
-            setInstalledPackages();
-            //ProgressBar 非表示
-            progressBar.setVisibility( View.GONE );
-            //ListView 表示
-            ListView listView =  mView.findViewById( R.id.process_list );
-            listView.setVisibility( View.VISIBLE );
-            //ListView データ表示
-            Context context = getActivity();
-            ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
-            listView.setAdapter( listViewAdapter );
+            if ( mArrayList.size()>0 ) { return; } //表示用データの取得は一度のみにする。
+
+            final Handler handler = new Handler(); //UIスレッドでのハンドラー生成
+            new Thread (new Runnable() { //スレッドを生成
+                @Override
+                public void run() { //スレッドを実行
+                    setInstalledPackages(); //表示するデータを取得
+                    handler.post( new Runnable() { //UIスレッドで作成したハンドラ－に処理をポストする。（UIの操作）
+                        @Override
+                        public void run() {
+                            Log.d( CLASS_NAME, "handler.post().run." );
+                            Log.d( CLASS_NAME, "mArrayList.size : " + mArrayList.size() );
+                            //ListView データ表示
+                            Context context = getActivity();
+                            ListViewAdapter listViewAdapter = new ListViewAdapter( context, R.layout.fragment_page, R.id.list_row_text, mArrayList );
+                            mListView.setAdapter( listViewAdapter );
+                            //ProgressBar 非表示
+                            mProgressBar.setVisibility( View.GONE );
+                            //ListView 表示
+                            mListView.setVisibility( View.VISIBLE );
+                        }
+                    });
+                }
+            } ).start();
         }
         else {
         }//if ( isVisibleToUser )
