@@ -1,1 +1,4 @@
-<resources></resources>
+<resources>
+    <string name="app_name">アプリです！！(demo)</string>
+    <string name="demoActivity_name">アプリリスト(demo)</string>
+</resources>

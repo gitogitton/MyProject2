@@ -1,13 +1,9 @@
 <resources>
-    <string name="app_name">アプリです！！</string>
-    <string name="mainActivity_name">アプリリスト</string>
-    <string name="demoActivity_name">アプリリスト(demo)</string>
-
+    <string name="app_name">アプリです！！(main)</string>
+    <string name="mainActivity_name">アプリリスト(main)</string>
     <string name="test_string">テストです。</string>
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="No_Data">データがありません。</string>
     <string name="error">--------------------</string>
-
     <string name="detail_Info">詳細情報</string>
 </resources>
